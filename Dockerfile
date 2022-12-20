@@ -13,6 +13,7 @@ COPY --from=builder /app/dist .
 COPY --from=builder /app/node_modules ./node_modules
 CMD ["index.js"]
 
+EXPOSE 8080
 ARG BUILD_DATE
 ARG VERSION
 ARG GIT_STATE
