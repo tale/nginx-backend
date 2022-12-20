@@ -1,0 +1,11 @@
+{
+	"extends": "tale",
+	"overrides": [
+		{
+			"files": ["tsup.config.ts"],
+			"parserOptions": {
+				"project": "tsconfig.node.json"
+			}
+		}
+	]
+}

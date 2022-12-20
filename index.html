@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+	<title>{STATUS_CODE} {ERROR_TYPE}</title>
+	<meta charset="UTF-8">
+</head>
+
+<style>
+	:root {
+		--color: rgb(0, 5, 5);
+		--background: rgb(250, 250, 255);
+	}
+
+	html,
+	body,
+	.flex {
+		background-color: var(--background);
+		height: 100%;
+		color: var(--color);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		font-family: -apple-system, BlinkMacSystemFont, "SF Pro", sans-serif;
+	}
+
+	footer {
+		position: fixed;
+		padding: 0.25rem;
+		bottom: 0;
+		width: 100%;
+		height: 2rem;
+		font-family: 'Courier New', monospace;
+		font-size: 0.8rem;
+	}
+
+	a {
+		color: inherit;
+		text-decoration: underline;
+		cursor: inherit;
+	}
+
+	.mini {
+		font-size: 0.7em;
+		opacity: 0.75;
+		font-family: 'Courier New', Courier, monospace;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:root {
+			--color: rgb(187, 187, 187);
+			--background: rgb(0, 5, 5);
+		}
+	}
+
+</style>
+
+<body>
+	<div id="flex">
+		<svg width="96" height="96" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+			<defs>
+				<linearGradient id="gradient" x1="0%" y1="50%" x2="100%" y2="50%">
+					<stop offset="0%" style="stop-color:rgb(255,161,0);stop-opacity:1.00" />
+					<stop offset="100%" style="stop-color:rgb(255,187,0);stop-opacity:1.00" />
+				</linearGradient>
+			</defs>
+			<path
+				d="M12 2c5.523 0 10 4.478 10 10s-4.477 10-10 10S2 17.522 2 12 6.477 2 12 2Zm.002 13.004a.999.999 0 1 0 0 1.997.999.999 0 0 0 0-1.997ZM12 7a1 1 0 0 0-.993.884L11 8l.002 5.001.007.117a1 1 0 0 0 1.986 0l.007-.117L13 8l-.007-.117A1 1 0 0 0 12 7Z"
+				fill="url(#gradient)" />
+		</svg>
+		<div>
+			<h2>{STATUS_CODE} {ERROR_TYPE}</h2>
+			<p>{ERROR_CLASS_MESSAGE}</p>
+
+			<p class="mini">
+				Requested Resource: {ORIGINAL_URI}<br>
+				Kubernetes Origin: {K8S_ORIGIN}<br>
+			</p>
+		</div>
+	</div>
+	<footer>
+		<p>Copyright &copy; 2020-{CURRENT_YEAR} <a href="https://tale.me">Aarnav Tale</a></p>
+	</footer>
+</body>
+
+</html>
