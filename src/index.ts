@@ -123,6 +123,8 @@ server.on('request', (request, response) => {
 		return
 	}
 
+	console.log(`http: ${statusCode} ${originalUri} - ${requestId}#_${serviceName}@${namespace}`)
+
 	const mimeType = accepts.split(';')[0]
 	const { type, message } = getErrorType(statusCode)
 	const date = new Date()
@@ -170,3 +172,4 @@ server.on('request', (request, response) => {
 })
 
 server.listen(8080)
+console.log('http: listening on port 8080')
