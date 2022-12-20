@@ -1,0 +1,10 @@
+.git/
+.vscode/
+dist/
+node_modules/
+.dockerignore
+.eslintrc
+.gitignore
+Dockerfile
+README.md
+Taskfile.yaml
