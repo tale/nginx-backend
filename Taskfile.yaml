@@ -8,7 +8,7 @@ tasks:
         silent: true
       - cmd: docker buildx create --name nginx-builder --use
         silent: true
-      - cmd: docker buildx build --platform linux/amd64 -t tale.me/library/nginx-backend:$(git tag --sort=-v:refname | cut -c 2- | head -n 1) --push --build-arg BUILD_DATE=$(date --rfc-3339=date) --build-arg VERSION=$(git tag --sort=-v:refname | cut -c 2- | head -n 1) --build-arg GIT_STATE=$(git rev-parse HEAD) .
+      - cmd: docker buildx build --platform linux/amd64 -t tale.me/k8s/nginx-backend:$(git tag --sort=-v:refname | cut -c 2- | head -n 1) --push --build-arg BUILD_DATE=$(date --rfc-3339=date) --build-arg VERSION=$(git tag --sort=-v:refname | cut -c 2- | head -n 1) --build-arg GIT_STATE=$(git rev-parse HEAD) .
         silent: false
       - defer: docker buildx rm nginx-builder
         silent: true
