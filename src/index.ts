@@ -129,7 +129,7 @@ server.on('request', (request, response) => {
 	const { type, message } = getErrorType(statusCode)
 	const date = new Date()
 
-	if (mimeType.endsWith('json')) {
+	if (mimeType.includes('application/json')) {
 		const payload = JSON.stringify({
 			error: `${statusCode} ${type}`,
 			meta: {
@@ -144,7 +144,7 @@ server.on('request', (request, response) => {
 		return
 	}
 
-	if (mimeType.endsWith('html')) {
+	if (mimeType.includes('text/html')) {
 		const payload = $html.trim()
 			.replaceAll('{STATUS_CODE}', statusCode)
 			.replaceAll('{ORIGINAL_URI}', originalUri)
