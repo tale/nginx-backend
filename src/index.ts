@@ -102,6 +102,15 @@ function getErrorType(statusCode: string) {
 	}
 }
 
+type Metadata = {
+	statusCode: string;
+	accepts: string;
+	originalUri: string;
+	namespace: string;
+	serviceName: string;
+	requestId: string;
+}
+
 const server = createServer()
 server.on('request', (request, response) => {
 	if (request.url === '/healthz') {
@@ -119,10 +128,37 @@ server.on('request', (request, response) => {
 
 	// Ignoring X-Ingress-Name & X-Service-Port
 	if (!(statusCode && accepts && originalUri && namespace && serviceName && requestId)) {
-		endError(response, 'Invalid request sent from Kubernetes NGINX Ingress Controller')
+		const { type, message } = getErrorType('404')
+		const date = new Date()
+
+		const payload = $html.trim()
+			.replaceAll('{STATUS_CODE}', '404')
+			.replaceAll('{ORIGINAL_URI}', request.url ?? '/')
+			.replaceAll('{ERROR_CLASS_MESSAGE}', message)
+			.replaceAll('{ERROR_TYPE}', type)
+			.replaceAll('{K8S_ORIGIN}', 'anonymous#_controller@nginx-ingress')
+			.replaceAll('{CURRENT_YEAR}', date.getUTCFullYear()
+				.toString())
+
+		response.statusCode = 404
+		endSuccess(response, payload, 'text/html')
 		return
 	}
 
+	const metadata: Metadata = {
+		statusCode,
+		accepts,
+		originalUri,
+		namespace,
+		serviceName,
+		requestId
+	}
+
+	handleCustomError(response, metadata)
+})
+
+function handleCustomError(response: ServerResponse, metadata: Metadata) {
+	const { statusCode, accepts, originalUri, namespace, serviceName, requestId } = metadata
 	console.log(`http: ${statusCode} ${originalUri} - ${requestId}#_${serviceName}@${namespace}`)
 
 	const mimeType = accepts.split(';')[0]
@@ -150,8 +186,6 @@ server.on('request', (request, response) => {
 			.replaceAll('{ORIGINAL_URI}', originalUri)
 			.replaceAll('{ERROR_CLASS_MESSAGE}', message)
 			.replaceAll('{ERROR_TYPE}', type)
-			.replaceAll('{REQUEST_ID}', requestId)
-			.replaceAll('{ORIGINAL_URI}', originalUri)
 			.replaceAll('{K8S_ORIGIN}', `${requestId}#_${serviceName}@${namespace}`)
 			.replaceAll('{CURRENT_YEAR}', date.getUTCFullYear()
 				.toString())
@@ -169,7 +203,7 @@ server.on('request', (request, response) => {
 	].join('\n')
 
 	endSuccess(response, payload, 'text/plain')
-})
+}
 
 server.listen(8080)
 console.log('http: listening on port 8080')
